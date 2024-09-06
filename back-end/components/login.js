@@ -10,10 +10,10 @@ app.use(express.json());
 
 // Database connection
 const db = mysql.createConnection({
-  host: 'localhost',     // Your database host (e.g., 'localhost')
-  user: 'root',          // Your database username
-  password: '',          // Your database password
-  database: 'fitness_tracker', // Replace with your database name
+  host: 'localhost',     
+  user: 'root',          
+  password: '',          
+  database: 'fitness_tracker',
 });
 
 // Endpoint for login
