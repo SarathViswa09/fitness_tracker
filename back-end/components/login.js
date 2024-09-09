@@ -16,23 +16,3 @@ const db = mysql.createConnection({
   database: 'fitness_tracker',
 });
 
-// Endpoint for login
-app.post('/login', (req, res) => {
-  const { userName, password } = req.body;
-  const query = 'SELECT * FROM login WHERE user_name = ? AND password = ?';
-
-  db.query(query, [userName, password], (err, results) => {
-    if (err) return res.status(500).send('Database error');
-
-    if (results.length > 0) {
-      res.status(200).send({ message: 'Login successful' });
-    } else {
-      res.status(401).send({ message: 'Invalid credentials' });
-    }
-  });
-});
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
