@@ -1,34 +1,35 @@
-import React, { useState } from 'react';
-import { Form } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
+import axios from "axios";
+import React, { useState } from "react";
+import { Form } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 
 const Login = ({ onLogin }) => {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   const submitHandler = async () => {
-    const loginData = { userName, password };
-
     try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.post(
+        "/login",
+        {
+          userName,
+          password,
         },
-        body: JSON.stringify(loginData),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 200) {
-        onLogin(); // Successfully logged in
-      } else {
-        alert(data.message); // Show the error message
-        window.location.reload();
-      }
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // Optional, if you are dealing with cookies or authentication
+        }
+      );
+      setMessage("Login successful");
+      onLogin(); // Notify parent component of successful login
     } catch (error) {
-      console.error('Error during login:', error);
-      alert('An error occurred during login. Please try again.');
+      console.error("Error details:", error);
+      setMessage(
+        "Error: " + (error.response ? error.response.data : error.message)
+      );
     }
   };
 
@@ -52,9 +53,16 @@ const Login = ({ onLogin }) => {
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit" id="submit" onClick={submitHandler}>
+      <Button
+        variant="primary"
+        type="button"
+        id="submit"
+        onClick={submitHandler}
+      >
         <b>Submit</b>
       </Button>
+
+      {message && <div className="alert alert-info mt-3">{message}</div>}
     </>
   );
 };
