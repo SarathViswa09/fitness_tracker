@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { FaBars } from 'react-icons/fa';
-import { FcCustomerSupport } from 'react-icons/fc';
-import { GiFamilyTree } from 'react-icons/gi';
-import { ImAddressBook, ImStatsDots } from 'react-icons/im';
+import { ImStatsDots } from 'react-icons/im';
 import { IoPersonCircle } from "react-icons/io5";
-import { MdProductionQuantityLimits } from 'react-icons/md';
-import { TbRoadSign } from 'react-icons/tb';
+import { TbDatabaseOff } from "react-icons/tb";
 import { NavLink } from 'react-router-dom';
- 
  
 const Sidebar = ({children}) => {
   const[isOpen,setIsOpen]=useState(false);
@@ -25,28 +21,28 @@ const Sidebar = ({children}) => {
     },
     {
       path:"/customer",
-      name:"Customer",
-      icon:<FcCustomerSupport/>
+      name:"NA",
+      icon:<TbDatabaseOff />
     },
     {
       path:"/distributor",
-      name:"Distributor",
-      icon:<TbRoadSign/>
+      name:"NA",
+      icon:<TbDatabaseOff />
     },
     {
       path:"/product",
-      name:"Product",
-      icon:<MdProductionQuantityLimits/>
+      name:"NA",
+      icon:<TbDatabaseOff />
     },
     {
       path:"/productfamily",
-      name:"Product Family",
-      icon:<GiFamilyTree/>
+      name:"NA",
+      icon:<TbDatabaseOff />
     },
     {
       path:"/address",
-      name:"Address",
-      icon:<ImAddressBook/>
+      name:"NA",
+      icon:<TbDatabaseOff />
     }
  
   ]

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import Header from "../components/Header";
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -39,56 +40,61 @@ const SignUp = () => {
 
   return (
     <>
-      <Form.Group className="col-md-4 mb-3">
-        <Form.Label>First Name:</Form.Label>
-        <Form.Control
-          type="text"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          required
-        />
-      </Form.Group>
+      <Header />
+      <div className="login-container">
+        <div className="login-box">
+          <Form.Group className="mb-3">
+            <Form.Label>First Name:</Form.Label>
+            <Form.Control
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-      <Form.Group className="col-md-4 mb-3">
-        <Form.Label>Last Name:</Form.Label>
-        <Form.Control
-          type="text"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          required
-        />
-      </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Last Name:</Form.Label>
+            <Form.Control
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-      <Form.Group className="col-md-4 mb-3">
-        <Form.Label>Email ID:</Form.Label>
-        <Form.Control
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Email ID:</Form.Label>
+            <Form.Control
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-      <Form.Group className="col-md-4 mb-3">
-        <Form.Label>Password:</Form.Label>
-        <Form.Control
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Password:</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-      <Button
-        variant="primary"
-        type="button"
-        id="submit"
-        onClick={submitHandler}
-      >
-        <b>Sign Up</b>
-      </Button>
+          <Button
+            variant="primary"
+            type="button"
+            id="submit"
+            onClick={submitHandler}
+          >
+            <b>Sign Up</b>
+          </Button>
 
-      {message && <div className="alert alert-info mt-3">{message}</div>}
+          {message && <div className="alert alert-info mt-3">{message}</div>}
+        </div>
+      </div>
     </>
   );
 };
