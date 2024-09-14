@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
-import './App.css';
-import Login from './components/Login';
-import TestPage from './components/TestPage';
+import React, { useState } from "react";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import "./App.css";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+import SignUp from "./pages/SignUp";
+import Statistics from "./pages/Statistics";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,13 +21,21 @@ function App() {
   };
 
   return (
-    <>
+    <BrowserRouter>
+      {isAuthenticated && <Header />}
       {!isAuthenticated ? (
         <Login onLogin={handleLogin} />
       ) : (
-        <TestPage />
+        <Sidebar>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile" element={<Profile/>}/>
+            <Route path="/stats" element={<Statistics/>}/>
+          </Routes>
+        </Sidebar>
       )}
-    </>
+    </BrowserRouter>
   );
 }
 

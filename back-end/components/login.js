@@ -32,16 +32,11 @@ connection.connect((err) => {
   console.log('Connected to the MySQL database');
 });
 
-// Route to handle login
+//login
 app.post('/login', (req, res) => {
   const { userName, password } = req.body;
-
-  // Add a console log to track what the incoming data looks like
   console.log('Login attempt:', { userName, password });
-
-  // Perform a case-insensitive query
-  const query = 'SELECT * FROM login WHERE LOWER(user_name) = LOWER(?) AND password = ?';
-
+  const query = 'SELECT * FROM signup WHERE LOWER(email) = LOWER(?) AND password = ?';
   connection.query(query, [userName, password], (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
@@ -51,7 +46,6 @@ app.post('/login', (req, res) => {
 
     // Log the results for debugging
     console.log('Query results:', results);
-
     if (results.length > 0) {
       res.status(200).send('Login successful');
     } else {
@@ -60,7 +54,20 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Start the server
+//signup
+app.post('/signup', (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+  const query = 'INSERT INTO signup (first_name, last_name, email, password) VALUES (?, ?, ?, ?)';
+  connection.query(query, [firstName, lastName, email, password], (err, results) => {
+      if (err) {
+          console.error('Error executing query:', err);
+          res.status(500).send('Error executing query');
+          return;
+      }
+      res.status(200).send('Sign-up successful');
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
