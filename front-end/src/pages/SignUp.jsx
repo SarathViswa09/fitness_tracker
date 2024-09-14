@@ -3,17 +3,22 @@ import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
-const Login = ({ onLogin }) => {
-  const [userName, setUserName] = useState("");
+const SignUp = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [message, setMessage] = useState("");
 
   const submitHandler = async () => {
     try {
       const response = await axios.post(
-        "/login",
+        "/signup",
         {
-          userName,
+          firstName,
+          lastName,
+          email,
           password,
         },
         {
@@ -23,8 +28,7 @@ const Login = ({ onLogin }) => {
           withCredentials: true, // Optional, if you are dealing with cookies or authentication
         }
       );
-      setMessage("Login successful");
-      onLogin(); // Notify parent component of successful login
+      setMessage("Signup successful");
     } catch (error) {
       console.error("Error details:", error);
       setMessage(
@@ -36,11 +40,32 @@ const Login = ({ onLogin }) => {
   return (
     <>
       <Form.Group className="col-md-4 mb-3">
-        <Form.Label> Email ID:</Form.Label>
+        <Form.Label>First Name:</Form.Label>
         <Form.Control
           type="text"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="col-md-4 mb-3">
+        <Form.Label>Last Name:</Form.Label>
+        <Form.Control
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="col-md-4 mb-3">
+        <Form.Label>Email ID:</Form.Label>
+        <Form.Control
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
         />
       </Form.Group>
 
@@ -50,6 +75,7 @@ const Login = ({ onLogin }) => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
       </Form.Group>
 
@@ -59,7 +85,7 @@ const Login = ({ onLogin }) => {
         id="submit"
         onClick={submitHandler}
       >
-        <b>Submit</b>
+        <b>Sign Up</b>
       </Button>
 
       {message && <div className="alert alert-info mt-3">{message}</div>}
@@ -67,4 +93,4 @@ const Login = ({ onLogin }) => {
   );
 };
 
-export default Login;
+export default SignUp;
