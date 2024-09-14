@@ -36,7 +36,7 @@ const Login = ({ onLogin }) => {
   return (
     <>
       <Form.Group className="col-md-4 mb-3">
-        <Form.Label>User Name:</Form.Label>
+        <Form.Label> Email ID:</Form.Label>
         <Form.Control
           type="text"
           value={userName}

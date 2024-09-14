@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import Login from './components/Login';
-import TestPage from './components/TestPage';
+import SignUp from './components/SignUp';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,7 +19,8 @@ function App() {
       {!isAuthenticated ? (
         <Login onLogin={handleLogin} />
       ) : (
-        <TestPage />
+        <SignUp/>
+
       )}
     </>
   );
