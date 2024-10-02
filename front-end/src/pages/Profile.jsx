@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Profile = () => {
-  return (
-    <div>
-        <p>Profile goes here</p>
-    </div>
-  )
-}
+  return <>//Nitish work on this</>;
+};
 
-export default Profile
+export default Profile;

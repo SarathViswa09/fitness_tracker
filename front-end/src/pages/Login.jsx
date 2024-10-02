@@ -27,7 +27,7 @@ const Login = ({ onLogin }) => {
           withCredentials: true,
         }
       );
-      setMessage("Login successful");
+      setMessage("Login successful!");
       onLogin();
     } catch (error) {
       console.error("Error details:", error);
