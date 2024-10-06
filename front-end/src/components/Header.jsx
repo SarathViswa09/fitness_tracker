@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header = () => {
+const Header = (onLogout) => {
   return (
     <>
       <div className="header">
