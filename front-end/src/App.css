@@ -136,3 +136,44 @@ main {
 .link_text {
   font-size: 20px;
 }
+
+/*
+CSS for card on homepage goes here
+*/
+.card {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  max-width: 300px;
+  margin: 20px auto;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+}
+
+.card h2 {
+  font-size: 18px;
+  color: #0a0909;
+}
+
+.card p {
+  color: #070707;
+  font-size: 16px;
+}
+body {
+  font-family: Arial, sans-serif;
+}
+
+.homeH1 {
+  color: #333;
+  font-size: 24px;
+  text-align: center;
+  color: rgb(10, 10, 10);
+  font: bold;
+}

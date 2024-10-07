@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Statistics from "./pages/Statistics";
+import WorkOut from "./pages/WorkOut";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/stats" element={<Statistics />} />
+            <Route path="/workout" element={<WorkOut />} />
           </Routes>
         </Sidebar>
       )}
