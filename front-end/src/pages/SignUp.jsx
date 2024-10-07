@@ -130,7 +130,7 @@ const SignUp = () => {
             <Form.Control
               type="number"
               step="0.01"
-              placeholder="Weight in lbs"
+              placeholder="Weight in kgs"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
               required

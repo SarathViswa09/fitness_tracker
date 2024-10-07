@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CgGym } from "react-icons/cg";
 import { FaBars } from "react-icons/fa";
 import { ImStatsDots } from "react-icons/im";
 import { IoIosHome } from "react-icons/io";
@@ -31,9 +32,9 @@ const Sidebar = ({ children }) => {
       icon: <TbListDetails />,
     },
     {
-      path: "/TBD",
-      name: "NA",
-      icon: <TbDatabaseOff />,
+      path: "/workout",
+      name: "WorkOut",
+      icon: <CgGym />,
     },
     {
       path: "/TBD",

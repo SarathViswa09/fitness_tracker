@@ -50,7 +50,6 @@ app.post("/login", (req, res) => {
 
     global.userDetails = results;
 
-
     // Log the results for debugging
     console.log("Query results:", results);
     if (results.length > 0) {
@@ -63,12 +62,13 @@ app.post("/login", (req, res) => {
 
 //signup
 app.post("/signup", (req, res) => {
-  const { firstName, lastName, email, confPassword,floatHeight,floatWeight } = req.body;
+  const { firstName, lastName, email, confPassword, floatHeight, floatWeight } =
+    req.body;
   const query =
     "INSERT INTO signup (first_name, last_name, email, password, height, weight) VALUES (?, ?, ?, ?,?,?)";
   connection.query(
     query,
-    [firstName, lastName, email, confPassword,floatHeight,floatWeight],
+    [firstName, lastName, email, confPassword, floatHeight, floatWeight],
     (err, results) => {
       if (err) {
         console.error("Error executing query:", err);
@@ -82,12 +82,42 @@ app.post("/signup", (req, res) => {
 
 //display user name
 app.get("/user/name", (req, res) => {
-  let Fname = userDetails[0].first_name + ' ' +userDetails[0].last_name;
-  res.json({ name: Fname });
+  let Fname = userDetails[0].first_name + " " + userDetails[0].last_name;
+  let height = userDetails[0].height;
+  let weight = userDetails[0].weight;
+  res.json({ name: Fname, h: height, w: weight });
 });
 
 //logic for Updated signup page goes here
 
+//workout data to database
+app.post("/workout", (req, res) => {
+  const { duration, type } = req.body;
+  let email = userDetails[0].email;
+  const query = "insert into workout (duration,type,email) values(?,?,?)";
+  connection.query(query, [duration, type, email], (err, results) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      res.status(500).send("Error executing query");
+      return;
+    }
+    res.status(200).send("Data updated successfully");
+  });
+});
+
+//fetch data from workout table
+app.get("/workout/results", (req, res) => {
+  const query = "select * from workout where email = ?";
+  let email = userDetails[0].email;
+  connection.query(query, email, (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log("Results: ", results);
+    res.json(results);
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
