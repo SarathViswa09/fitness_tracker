@@ -177,3 +177,22 @@ body {
   color: rgb(10, 10, 10);
   font: bold;
 }
+
+
+
+.profile-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+}
+
+.profile-field {
+  margin-bottom: 10px;
+}
+
+.profile-field strong {
+  color: #333;
+}
