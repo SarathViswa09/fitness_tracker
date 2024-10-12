@@ -10,7 +10,7 @@ global.userDetails = {};
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
@@ -88,6 +88,16 @@ app.get("/user/name", (req, res) => {
   res.json({ name: Fname, h: height, w: weight });
 });
 
+
+app.get("/user/profile", (req, res) => {
+  let firstName = userDetails[0].first_name;
+  let lastName = userDetails[0].last_name;
+  let uEmail = userDetails[0].email;
+  let userHeight = userDetails[0].height;
+  let userWeight = userDetails[0].weight;
+  res.json({ userFname: firstName, userLname: lastName, email: uEmail, h: userHeight, w: userWeight });
+});
+
 //logic for Updated signup page goes here
 
 //workout data to database
@@ -118,6 +128,8 @@ app.get("/workout/results", (req, res) => {
     res.json(results);
   });
 });
+
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
