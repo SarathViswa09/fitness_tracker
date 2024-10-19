@@ -7,14 +7,12 @@ const app = express();
 const port = 6000;
 
 global.userDetails = {};
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 app.options("*", cors());
 app.use(express.json());
@@ -129,6 +127,48 @@ app.get("/workout/results", (req, res) => {
   });
 });
 
+
+
+// In your Node.js backend file
+app.put("/user/profile/update", (req, res) => {
+  console.log("Received update request:", req.body); // Add this line for debugging
+  
+  const { firstName, lastName, userEmail, height, weight } = req.body;
+  const currentEmail = userDetails[0].email;
+
+  const query = `
+    UPDATE signup 
+    SET first_name = ?, 
+        last_name = ?, 
+        email = ?,
+        height = ?,
+        weight = ?
+    WHERE email = ?`;
+
+  connection.query(
+    query,
+    [firstName, lastName, userEmail, height, weight, currentEmail],
+    (err, results) => {
+      if (err) {
+        console.error("Error updating profile:", err);
+        res.status(500).send("Error updating profile");
+        return;
+      }
+      
+      // Update userDetails with new information
+      userDetails[0] = {
+        ...userDetails[0],
+        first_name: firstName,
+        last_name: lastName,
+        email: userEmail,
+        height: height,
+        weight: weight
+      };
+
+      res.status(200).json({ message: "Profile updated successfully" });
+    }
+  );
+});
 
 
 app.listen(port, () => {
