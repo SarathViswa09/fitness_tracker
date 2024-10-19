@@ -7,6 +7,7 @@ const Profile = () => {
   const [userEmail, setUserEmail] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
+  const [updateStatus, setUpdateStatus] = useState("");
 
   // Fetch user data from the server when the component mounts
   useEffect(() => {
@@ -19,7 +20,7 @@ const Profile = () => {
         setHeight(data.h);
         setWeight(data.w);
       })
-      .catch((error) => console.error("Error fetching username:", error));
+      .catch((error) => console.error("Error fetching profile:", error));
   }, []);
 
   // Editing mode toggle
@@ -31,17 +32,47 @@ const Profile = () => {
   };
 
   // Handler to save the edited data
-  const handleSaveClick = () => {
-    // Simulate saving to backend here (you might want to use a POST/PUT request)
-    // Example: fetch('/user/profile', { method: 'PUT', body: JSON.stringify({ ... }) })
-    
-    // After saving, disable editing mode
-    setIsEditing(false);
+  const handleSaveClick = async () => {
+    try {
+      const response = await fetch("/user/profile/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          userEmail,
+          height,
+          weight,
+        }),
+      });
+
+      if (response.ok) {
+        setUpdateStatus("Profile updated successfully!");
+        setIsEditing(false);
+      } else {
+        setUpdateStatus("Failed to update profile. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setUpdateStatus("Error updating profile. Please try again.");
+    }
+
+    // Clear status message after 3 seconds
+    setTimeout(() => {
+      setUpdateStatus("");
+    }, 3000);
   };
 
   return (
     <div className="profile-container">
       <h3>User Profile</h3>
+      {updateStatus && (
+        <div className={`status-message ${updateStatus.includes("Error") ? "error" : "success"}`}>
+          {updateStatus}
+        </div>
+      )}
       <div className="profile-field">
         <strong>First Name: </strong>
         {isEditing ? (
@@ -110,9 +141,13 @@ const Profile = () => {
 
       <div className="edit-button">
         {isEditing ? (
-          <button className = "user-btn" onClick={handleSaveClick}>Save</button>
+          <button className="user-btn" onClick={handleSaveClick}>
+            Save
+          </button>
         ) : (
-          <button className = "user-btn" onClick={handleEditClick}>Edit</button>
+          <button className="user-btn" onClick={handleEditClick}>
+            Edit
+          </button>
         )}
       </div>
     </div>
