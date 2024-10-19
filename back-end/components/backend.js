@@ -90,10 +90,11 @@ app.get("/user/name", (req, res) => {
 app.get("/user/profile", (req, res) => {
   let firstName = userDetails[0].first_name;
   let lastName = userDetails[0].last_name;
+  let user_password = userDetails[0].password;
   let uEmail = userDetails[0].email;
   let userHeight = userDetails[0].height;
   let userWeight = userDetails[0].weight;
-  res.json({ userFname: firstName, userLname: lastName, email: uEmail, h: userHeight, w: userWeight });
+  res.json({ userFname: firstName, userLname: lastName, userPassword: user_password, email: uEmail, h: userHeight, w: userWeight });
 });
 
 //logic for Updated signup page goes here
@@ -133,13 +134,14 @@ app.get("/workout/results", (req, res) => {
 app.put("/user/profile/update", (req, res) => {
   console.log("Received update request:", req.body); // Add this line for debugging
   
-  const { firstName, lastName, userEmail, height, weight } = req.body;
+  const { firstName, lastName, userPassword, userEmail, height, weight } = req.body;
   const currentEmail = userDetails[0].email;
 
   const query = `
-    UPDATE signup 
-    SET first_name = ?, 
-        last_name = ?, 
+    UPDATE signup
+    SET first_name = ?,
+        last_name = ?,
+        password = ?,
         email = ?,
         height = ?,
         weight = ?
@@ -147,7 +149,7 @@ app.put("/user/profile/update", (req, res) => {
 
   connection.query(
     query,
-    [firstName, lastName, userEmail, height, weight, currentEmail],
+    [firstName, lastName, userPassword, userEmail, height, weight, currentEmail],
     (err, results) => {
       if (err) {
         console.error("Error updating profile:", err);
@@ -160,6 +162,7 @@ app.put("/user/profile/update", (req, res) => {
         ...userDetails[0],
         first_name: firstName,
         last_name: lastName,
+        user_password:userPassword,
         email: userEmail,
         height: height,
         weight: weight

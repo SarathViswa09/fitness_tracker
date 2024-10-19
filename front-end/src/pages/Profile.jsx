@@ -4,6 +4,7 @@ const Profile = () => {
   // Separate states for each profile field
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [userPassword, setuserPassword] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
@@ -16,6 +17,7 @@ const Profile = () => {
       .then((data) => {
         setFirstName(data.userFname);
         setLastName(data.userLname);
+        setuserPassword(data.userPassword);
         setUserEmail(data.email);
         setHeight(data.h);
         setWeight(data.w);
@@ -42,6 +44,7 @@ const Profile = () => {
         body: JSON.stringify({
           firstName,
           lastName,
+          userPassword,
           userEmail,
           height,
           weight,
@@ -58,8 +61,6 @@ const Profile = () => {
       console.error("Error updating profile:", error);
       setUpdateStatus("Error updating profile. Please try again.");
     }
-
-    // Clear status message after 3 seconds
     setTimeout(() => {
       setUpdateStatus("");
     }, 3000);
@@ -97,6 +98,19 @@ const Profile = () => {
           />
         ) : (
           lastName
+        )}
+      </div>
+      <div className="profile-field">
+        <strong>Password: </strong>
+        {isEditing ? (
+          <input
+            type="text"
+            name="userPassword"
+            value={userPassword}
+            onChange={(e) => setuserPassword(e.target.value)}
+          />
+        ) : (
+          userPassword
         )}
       </div>
       <div className="profile-field">
