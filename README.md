@@ -1,2 +1,2 @@
-the code which you see is dummy, it has no functionality.
-create your own branch and then upload your code then I will merge it to main repo
+To start the application, navigate to root directory i.e; fitness_tracker and then run the following command: **bash run.sh**, if you are using mac.
+If OS is windows, navigate to fitness_tracker/front-end and run the following command: **npm start & node ../back-end/components/backend.js**
