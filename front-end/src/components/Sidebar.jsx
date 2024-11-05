@@ -4,7 +4,7 @@ import { FaBars } from "react-icons/fa";
 import { ImStatsDots } from "react-icons/im";
 import { IoIosHome } from "react-icons/io";
 import { IoPersonCircle } from "react-icons/io5";
-import { TbDatabaseOff, TbListDetails } from "react-icons/tb";
+import { TbListDetails } from "react-icons/tb";
 import { NavLink } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
@@ -35,16 +35,6 @@ const Sidebar = ({ children }) => {
       path: "/workout",
       name: "WorkOut",
       icon: <CgGym />,
-    },
-    {
-      path: "/TBD",
-      name: "NA",
-      icon: <TbDatabaseOff />,
-    },
-    {
-      path: "/TBD",
-      name: "NA",
-      icon: <TbDatabaseOff />,
     },
   ];
   return (

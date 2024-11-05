@@ -1,17 +1,15 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 
-const Header = (onLogout) => {
+function Header({ onLogout }) {
   return (
-    <>
-      <div className="header">
-        <b style={{ color: "#0069aa" }}>Fitness</b>
-        <b style={{ color: "#00a5d9" }}> Tracker</b>
-        <span className="emoji" role="img" aria-label="muscle">
-          💪
-        </span>
+    <div className="header">
+      <b style={{ color: "#0069aa" }}>Fitness Tracker</b>
+      <div className="logout-container">
+        <Button onClick={onLogout}>Logout</Button>
       </div>
-    </>
+    </div>
   );
-};
+}
 
 export default Header;

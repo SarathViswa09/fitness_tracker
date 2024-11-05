@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 const Profile = () => {
-  // Separate states for each profile field
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userPassword, setuserPassword] = useState("");
@@ -10,7 +9,6 @@ const Profile = () => {
   const [height, setHeight] = useState("");
   const [updateStatus, setUpdateStatus] = useState("");
 
-  // Fetch user data from the server when the component mounts
   useEffect(() => {
     fetch("/user/profile")
       .then((response) => response.json())
@@ -25,15 +23,12 @@ const Profile = () => {
       .catch((error) => console.error("Error fetching profile:", error));
   }, []);
 
-  // Editing mode toggle
   const [isEditing, setIsEditing] = useState(false);
 
-  // Handler to enable editing mode
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
-  // Handler to save the edited data
   const handleSaveClick = async () => {
     try {
       const response = await fetch("/user/profile/update", {
@@ -70,7 +65,11 @@ const Profile = () => {
     <div className="profile-container">
       <h3>User Profile</h3>
       {updateStatus && (
-        <div className={`status-message ${updateStatus.includes("Error") ? "error" : "success"}`}>
+        <div
+          className={`status-message ${
+            updateStatus.includes("Error") ? "error" : "success"
+          }`}
+        >
           {updateStatus}
         </div>
       )}

@@ -7,12 +7,14 @@ const app = express();
 const port = 6000;
 
 global.userDetails = {};
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
 app.options("*", cors());
 app.use(express.json());
@@ -36,6 +38,9 @@ connection.connect((err) => {
 //login
 app.post("/login", (req, res) => {
   const { userName, password } = req.body;
+  const createQuery =
+    "CREATE TABLE IF NOT EXISTS signup (first_name VARCHAR(30) NOT NULL,last_name VARCHAR(30) NOT NULL,email VARCHAR(50) NOT NULL PRIMARY KEY,password VARCHAR(50) NOT NULL,height FLOAT,weight FLOAT);";
+  connection.query(createQuery);
   console.log("Login attempt:", { userName, password });
   const query =
     "SELECT * FROM signup WHERE LOWER(email) = LOWER(?) AND password = ?";
@@ -62,6 +67,9 @@ app.post("/login", (req, res) => {
 app.post("/signup", (req, res) => {
   const { firstName, lastName, email, confPassword, floatHeight, floatWeight } =
     req.body;
+  const createQuery =
+    "CREATE TABLE IF NOT EXISTS signup (first_name VARCHAR(30) NOT NULL,last_name VARCHAR(30) NOT NULL,email VARCHAR(50) NOT NULL PRIMARY KEY,password VARCHAR(50) NOT NULL,height FLOAT,weight FLOAT);";
+  connection.query(createQuery);
   const query =
     "INSERT INTO signup (first_name, last_name, email, password, height, weight) VALUES (?, ?, ?, ?,?,?)";
   connection.query(
@@ -86,7 +94,6 @@ app.get("/user/name", (req, res) => {
   res.json({ name: Fname, h: height, w: weight });
 });
 
-
 app.get("/user/profile", (req, res) => {
   let firstName = userDetails[0].first_name;
   let lastName = userDetails[0].last_name;
@@ -94,14 +101,22 @@ app.get("/user/profile", (req, res) => {
   let uEmail = userDetails[0].email;
   let userHeight = userDetails[0].height;
   let userWeight = userDetails[0].weight;
-  res.json({ userFname: firstName, userLname: lastName, userPassword: user_password, email: uEmail, h: userHeight, w: userWeight });
+  res.json({
+    userFname: firstName,
+    userLname: lastName,
+    userPassword: user_password,
+    email: uEmail,
+    h: userHeight,
+    w: userWeight,
+  });
 });
-
-//logic for Updated signup page goes here
 
 //workout data to database
 app.post("/workout", (req, res) => {
   const { duration, type } = req.body;
+  const createQuery =
+    "CREATE TABLE IF NOT EXISTS workout (today_date date default curdate(),duration int(3), type varchar(20),email varchar(50));";
+  connection.query(createQuery);
   let email = userDetails[0].email;
   const query = "insert into workout (duration,type,email) values(?,?,?)";
   connection.query(query, [duration, type, email], (err, results) => {
@@ -128,13 +143,12 @@ app.get("/workout/results", (req, res) => {
   });
 });
 
-
-
-// In your Node.js backend file
+//Update profile
 app.put("/user/profile/update", (req, res) => {
   console.log("Received update request:", req.body); // Add this line for debugging
-  
-  const { firstName, lastName, userPassword, userEmail, height, weight } = req.body;
+
+  const { firstName, lastName, userPassword, userEmail, height, weight } =
+    req.body;
   const currentEmail = userDetails[0].email;
 
   const query = `
@@ -149,30 +163,37 @@ app.put("/user/profile/update", (req, res) => {
 
   connection.query(
     query,
-    [firstName, lastName, userPassword, userEmail, height, weight, currentEmail],
+    [
+      firstName,
+      lastName,
+      userPassword,
+      userEmail,
+      height,
+      weight,
+      currentEmail,
+    ],
     (err, results) => {
       if (err) {
         console.error("Error updating profile:", err);
         res.status(500).send("Error updating profile");
         return;
       }
-      
+
       // Update userDetails with new information
       userDetails[0] = {
         ...userDetails[0],
         first_name: firstName,
         last_name: lastName,
-        user_password:userPassword,
+        user_password: userPassword,
         email: userEmail,
         height: height,
-        weight: weight
+        weight: weight,
       };
 
       res.status(200).json({ message: "Profile updated successfully" });
     }
   );
 });
-
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

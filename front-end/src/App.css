@@ -4,13 +4,12 @@ CSS STARTS HERE
 */
 .header {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  height: 100px;
-  background-color: #f0f8ff;
+  padding: 10px;
+  background-color: #e3e8ec;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 .header b {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 32px;
@@ -56,6 +55,12 @@ CSS STARTS HERE
   align-items: center;
   height: 100vh;
   background-color: #e0e0ea;
+}
+
+.side-image {
+  width: 100px; /* Adjust size as needed */
+  height: auto; /* Maintain aspect ratio */
+  margin: 0 20px; /* Space between the images and the login box */
 }
 
 .login-box {
@@ -203,7 +208,7 @@ body {
   margin-top: 10px;
 }
 
-.user-btn{
+.user-btn {
   padding: 10px 15px;
   background-color: #007bff;
   color: white;
@@ -215,7 +220,6 @@ body {
 .user-btn:disabled {
   background-color: #aaa;
 }
-
 
 .status-message {
   padding: 10px;
