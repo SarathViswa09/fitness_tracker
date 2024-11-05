@@ -22,7 +22,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {isAuthenticated && <Header />}
+      {isAuthenticated && <Header onLogout={handleLogout} />}
       {!isAuthenticated ? (
         <Login onLogin={handleLogin} />
       ) : (

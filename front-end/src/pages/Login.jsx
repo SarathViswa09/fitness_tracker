@@ -77,7 +77,7 @@ const Login = ({ onLogin }) => {
                   color: "blue",
                   textDecoration: "underline",
                 }}
-                onClick={() => setShowSignUp(true)} // Change state to show SignUp
+                onClick={() => setShowSignUp(true)}
               >
                 SignUp here!!
               </span>

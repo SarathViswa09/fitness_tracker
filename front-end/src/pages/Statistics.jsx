@@ -1,11 +1,48 @@
-import React from 'react'
+import React, { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Graph from "../components/Graph";
 
 const Statistics = () => {
-  return (
-    <div>
-      <h1>Stats go here</h1>
-    </div>
-  )
-}
+  const [results, setResults] = useState("");
+  const [loading, setLoading] = useState(false);
 
-export default Statistics
+  const getResults = () => {
+    setLoading(true);
+    fetch("/workout/results")
+      .then((response) => response.json())
+      .then((data) => {
+        setResults(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  };
+
+  return (
+    <>
+      <div>
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={getResults}
+          className="card"
+        >
+          <b>Get Stats</b>
+        </Button>
+        {loading && <div>Loading...</div>}
+        {results && (
+          <div>
+            <h2 className="homeH1">
+              <ul>Results:</ul>
+            </h2>
+            {<Graph results={results} />}
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default Statistics;
