@@ -26,7 +26,7 @@ const connection = mysql.createConnection({
   database: "fitness_tracker",
 });
 
-// Connect to MySQL
+
 connection.connect((err) => {
   if (err) {
     console.error("Error connecting to the database:", err);
@@ -35,11 +35,11 @@ connection.connect((err) => {
   console.log("Connected to the MySQL database");
 });
 
-//login
+
 app.post("/login", (req, res) => {
   const { userName, password } = req.body;
   const createQuery =
-    "CREATE TABLE IF NOT EXISTS signup (first_name VARCHAR(30) NOT NULL,last_name VARCHAR(30) NOT NULL,email VARCHAR(50) NOT NULL PRIMARY KEY,password VARCHAR(50) NOT NULL,height FLOAT,weight FLOAT);";
+    "CREATE TABLE IF NOT EXISTS signup (first_name VARCHAR(30) NOT NULL,last_name VARCHAR(30) NOT NULL,email VARCHAR(50) NOT NULL PRIMARY KEY,password VARCHAR(50) NOT NULL,height FLOAT,weight FLOAT,goal FLOAT);";
   connection.query(createQuery);
   console.log("Login attempt:", { userName, password });
   const query =
@@ -53,7 +53,6 @@ app.post("/login", (req, res) => {
 
     global.userDetails = results;
 
-    // Log the results for debugging
     console.log("Query results:", results);
     if (results.length > 0) {
       res.status(200).send("Login successful");
@@ -63,18 +62,18 @@ app.post("/login", (req, res) => {
   });
 });
 
-//signup
+
 app.post("/signup", (req, res) => {
-  const { firstName, lastName, email, confPassword, floatHeight, floatWeight } =
+  const { firstName, lastName, email, confPassword, floatHeight, floatWeight, floatGoal} =
     req.body;
   const createQuery =
-    "CREATE TABLE IF NOT EXISTS signup (first_name VARCHAR(30) NOT NULL,last_name VARCHAR(30) NOT NULL,email VARCHAR(50) NOT NULL PRIMARY KEY,password VARCHAR(50) NOT NULL,height FLOAT,weight FLOAT);";
+    "CREATE TABLE IF NOT EXISTS signup (first_name VARCHAR(30) NOT NULL,last_name VARCHAR(30) NOT NULL,email VARCHAR(50) NOT NULL PRIMARY KEY,password VARCHAR(50) NOT NULL,height FLOAT,weight FLOAT,goal FLOAT);";
   connection.query(createQuery);
   const query =
-    "INSERT INTO signup (first_name, last_name, email, password, height, weight) VALUES (?, ?, ?, ?,?,?)";
+    "INSERT INTO signup (first_name, last_name, email, password, height, weight, goal) VALUES (?, ?, ?, ?, ?, ?, ?)";
   connection.query(
     query,
-    [firstName, lastName, email, confPassword, floatHeight, floatWeight],
+    [firstName, lastName, email, confPassword, floatHeight, floatWeight, floatGoal],
     (err, results) => {
       if (err) {
         console.error("Error executing query:", err);
@@ -86,7 +85,7 @@ app.post("/signup", (req, res) => {
   );
 });
 
-//display user name
+
 app.get("/user/name", (req, res) => {
   let Fname = userDetails[0].first_name + " " + userDetails[0].last_name;
   let height = userDetails[0].height;
@@ -101,6 +100,7 @@ app.get("/user/profile", (req, res) => {
   let uEmail = userDetails[0].email;
   let userHeight = userDetails[0].height;
   let userWeight = userDetails[0].weight;
+  let userGoal = userDetails[0].goal
   res.json({
     userFname: firstName,
     userLname: lastName,
@@ -108,10 +108,11 @@ app.get("/user/profile", (req, res) => {
     email: uEmail,
     h: userHeight,
     w: userWeight,
+    g: userGoal
   });
 });
 
-//workout data to database
+
 app.post("/workout", (req, res) => {
   const { duration, type } = req.body;
   const createQuery =
@@ -129,7 +130,7 @@ app.post("/workout", (req, res) => {
   });
 });
 
-//fetch data from workout table
+
 app.get("/workout/results", (req, res) => {
   const query = "select * from workout where email = ?";
   let email = userDetails[0].email;
@@ -143,11 +144,11 @@ app.get("/workout/results", (req, res) => {
   });
 });
 
-//Update profile
-app.put("/user/profile/update", (req, res) => {
-  console.log("Received update request:", req.body); // Add this line for debugging
 
-  const { firstName, lastName, userPassword, userEmail, height, weight } =
+app.put("/user/profile/update", (req, res) => {
+  console.log("Received update request:", req.body); 
+
+  const { firstName, lastName, userPassword, userEmail, height, weight, goal} =
     req.body;
   const currentEmail = userDetails[0].email;
 
@@ -158,7 +159,8 @@ app.put("/user/profile/update", (req, res) => {
         password = ?,
         email = ?,
         height = ?,
-        weight = ?
+        weight = ?,
+        goal = ?
     WHERE email = ?`;
 
   connection.query(
@@ -170,6 +172,7 @@ app.put("/user/profile/update", (req, res) => {
       userEmail,
       height,
       weight,
+      goal,
       currentEmail,
     ],
     (err, results) => {
@@ -179,7 +182,6 @@ app.put("/user/profile/update", (req, res) => {
         return;
       }
 
-      // Update userDetails with new information
       userDetails[0] = {
         ...userDetails[0],
         first_name: firstName,
@@ -188,6 +190,7 @@ app.put("/user/profile/update", (req, res) => {
         email: userEmail,
         height: height,
         weight: weight,
+        goal: goal,
       };
 
       res.status(200).json({ message: "Profile updated successfully" });
