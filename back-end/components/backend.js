@@ -90,7 +90,9 @@ app.get("/user/name", (req, res) => {
   let Fname = userDetails[0].first_name + " " + userDetails[0].last_name;
   let height = userDetails[0].height;
   let weight = userDetails[0].weight;
-  res.json({ name: Fname, h: height, w: weight });
+  let goal = userDetails[0].goal;
+  
+  res.json({ name: Fname, h: height, w: weight, g: goal });
 });
 
 app.get("/user/profile", (req, res) => {
@@ -113,34 +115,89 @@ app.get("/user/profile", (req, res) => {
 });
 
 
+
+
 app.post("/workout", (req, res) => {
-  const { duration, type } = req.body;
-  const createQuery =
-    "CREATE TABLE IF NOT EXISTS workout (today_date date default curdate(),duration int(3), type varchar(20),email varchar(50));";
-  connection.query(createQuery);
-  let email = userDetails[0].email;
-  const query = "insert into workout (duration,type,email) values(?,?,?)";
-  connection.query(query, [duration, type, email], (err, results) => {
+  const { duration, category, type } = req.body; 
+  const email = userDetails[0].email;
+  const createQuery = `
+    CREATE TABLE IF NOT EXISTS workout (
+      today_date DATE DEFAULT CURDATE(),
+      duration INT(3),
+      category VARCHAR(20),
+      type VARCHAR(20),
+      email VARCHAR(50),
+      caloriesBurned FLOAT
+    );
+  `;
+  connection.query(createQuery, (err) => {
     if (err) {
-      console.error("Error executing query:", err);
-      res.status(500).send("Error executing query");
+      console.error("Error creating table:", err);
+      res.status(500).send("Error creating table");
       return;
     }
-    res.status(200).send("Data updated successfully");
+
+    const weightQuery = "SELECT weight FROM signup WHERE email = ?";
+    connection.query(weightQuery, [email], (err, weightResults) => {
+      if (err) {
+        console.error("Error fetching user weight:", err);
+        res.status(500).send("Error fetching user weight");
+        return;
+      }
+
+      if (weightResults.length === 0) {
+        res.status(404).send("User weight not found");
+        return;
+      }
+
+      const weight = weightResults[0].weight;
+      const MET_VALUES = {
+        running: 9.8,
+        swimming: 6.0,
+        cycling: 7.5,
+        chestWorkout: 3.5,
+        legsWorkout: 4.0,
+        absWorkout: 3.8,
+        backWorkout: 4.0,
+        armsWorkout: 3.0,
+      };
+
+      const durationHours = duration / 60;
+      const MET = MET_VALUES[type] || 1;
+      const caloriesBurned = MET * weight * durationHours;
+      const insertQuery = `
+        INSERT INTO workout (duration, category, type, email, caloriesBurned)
+        VALUES (?, ?, ?, ?, ?)
+      `;
+      connection.query(insertQuery, [duration, category, type, email, caloriesBurned], (err, results) => {
+        if (err) {
+          console.error("Error executing query:", err);
+          res.status(500).send("Error executing query");
+          return;
+        }
+        res.status(200).send("Workout logged successfully");
+      });
+    });
   });
 });
 
-
 app.get("/workout/results", (req, res) => {
-  const query = "select * from workout where email = ?";
-  let email = userDetails[0].email;
-  connection.query(query, email, (err, results) => {
+  if (!userDetails || !userDetails[0] || !userDetails[0].email) {
+    res.status(400).send("User not logged in or user details not available.");
+    return;
+  }
+
+  const email = userDetails[0].email;
+
+  const workoutQuery = "SELECT today_date, category, type, duration, caloriesBurned FROM workout WHERE email = ?";
+  connection.query(workoutQuery, [email], (err, workoutResults) => {
     if (err) {
-      console.log(err);
+      console.error("Error fetching workout data:", err);
+      res.status(500).send("Error fetching workout data");
       return;
     }
-    console.log("Results: ", results);
-    res.json(results);
+
+    res.json(workoutResults);
   });
 });
 
@@ -148,7 +205,7 @@ app.get("/workout/results", (req, res) => {
 app.put("/user/profile/update", (req, res) => {
   console.log("Received update request:", req.body); 
 
-  const { firstName, lastName, userPassword, userEmail, height, weight, goal} =
+  const { firstName, lastName, userEmail, height, weight, goal} =
     req.body;
   const currentEmail = userDetails[0].email;
 
@@ -156,7 +213,6 @@ app.put("/user/profile/update", (req, res) => {
     UPDATE signup
     SET first_name = ?,
         last_name = ?,
-        password = ?,
         email = ?,
         height = ?,
         weight = ?,
@@ -168,7 +224,6 @@ app.put("/user/profile/update", (req, res) => {
     [
       firstName,
       lastName,
-      userPassword,
       userEmail,
       height,
       weight,
@@ -186,7 +241,6 @@ app.put("/user/profile/update", (req, res) => {
         ...userDetails[0],
         first_name: firstName,
         last_name: lastName,
-        user_password: userPassword,
         email: userEmail,
         height: height,
         weight: weight,
@@ -197,6 +251,43 @@ app.put("/user/profile/update", (req, res) => {
     }
   );
 });
+
+app.put("/reset-password", (req, res) => {
+  const { email, newPassword } = req.body;
+
+  const query = "SELECT password FROM signup WHERE email = ?";
+  connection.query(query, [email], (err, results) => {
+    if (err) {
+      console.error("Error finding user:", err);
+      res.status(500).send("Error finding user");
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).send("User not found");
+      return;
+    }
+
+    const currentPassword = results[0].password;
+    if (newPassword === currentPassword) {
+      res.status(400).send("The new password is the same as the previous one. Please choose a different password.");
+      return;
+    }
+
+    const updateQuery = "UPDATE signup SET password = ? WHERE email = ?";
+    connection.query(updateQuery, [newPassword, email], (updateErr) => {
+      if (updateErr) {
+        console.error("Error updating password:", updateErr);
+        res.status(500).send("Error updating password");
+        return;
+      }
+
+      res.status(200).send({ message: "Password reset successful" });
+    });
+  });
+});
+
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
