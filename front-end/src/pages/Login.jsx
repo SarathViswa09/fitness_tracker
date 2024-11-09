@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import "../App.css";
-import Header from "../components/Header";
+import ForgotPassword from "./ForgotPassword";
 import SignUp from "./SignUp";
 
 const Login = ({ onLogin }) => {
@@ -11,6 +11,7 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [showSignUp, setShowSignUp] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const submitHandler = async () => {
     try {
@@ -41,9 +42,18 @@ const Login = ({ onLogin }) => {
     return <SignUp />;
   }
 
+
+  if (showForgotPassword) {
+    return <ForgotPassword />;
+  }
+
   return (
     <>
-      <Header />
+    <header>
+      <div className="header">
+        <b style={{ color: "#0069aa" }}>Fitness Tracker</b>
+      </div>
+    </header>
       <div className="login-container">
         <div className="login-box">
           <Form>
@@ -80,6 +90,19 @@ const Login = ({ onLogin }) => {
                 onClick={() => setShowSignUp(true)}
               >
                 SignUp here!!
+              </span>
+            </p>
+            <p>If you've forgotten your password</p>
+            <p>
+              <span
+                style={{
+                  cursor: "pointer",
+                  color: "blue",
+                  textDecoration: "underline",
+                }}
+                onClick={() => setShowForgotPassword(true)}
+              >
+                Forgot Password?
               </span>
             </p>
           </Form>

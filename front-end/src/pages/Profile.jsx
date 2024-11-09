@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 const Profile = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [userPassword, setuserPassword] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
@@ -16,7 +15,6 @@ const Profile = () => {
       .then((data) => {
         setFirstName(data.userFname);
         setLastName(data.userLname);
-        setuserPassword(data.userPassword);
         setUserEmail(data.email);
         setHeight(data.h);
         setWeight(data.w);
@@ -41,7 +39,6 @@ const Profile = () => {
         body: JSON.stringify({
           firstName,
           lastName,
-          userPassword,
           userEmail,
           height,
           weight,
@@ -100,19 +97,6 @@ const Profile = () => {
           />
         ) : (
           lastName
-        )}
-      </div>
-      <div className="profile-field">
-        <strong>Password: </strong>
-        {isEditing ? (
-          <input
-            type="text"
-            name="userPassword"
-            value={userPassword}
-            onChange={(e) => setuserPassword(e.target.value)}
-          />
-        ) : (
-          userPassword
         )}
       </div>
       <div className="profile-field">

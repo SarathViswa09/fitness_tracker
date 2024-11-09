@@ -53,6 +53,7 @@ const SignUp = () => {
         }
       );
       setMessage("Signup successful!");
+      window.location.reload();
     } catch (error) {
       console.error("Error details:", error);
       setMessage(

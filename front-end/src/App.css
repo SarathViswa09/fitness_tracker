@@ -1,4 +1,4 @@
-/* Header 
+/* Header
 CSS STARTS HERE
 ************************************************************************************************
 */
@@ -238,3 +238,51 @@ body {
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
+
+/*CSS for forgetPassword*/
+
+
+.forgot-password-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.forgot-password-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.forgot-password-box h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group .form-control {
+  border-radius: 4px;
+}
+
+.btn-primary {
+  width: 100%;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.alert-info {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
