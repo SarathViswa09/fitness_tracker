@@ -13,12 +13,14 @@ const SignUp = () => {
   const [message, setMessage] = useState("");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
+  const [goal, setGoal] = useState("");
 
   const submitHandler = async (e) => {
     const passWordRuleSet =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     const floatHeight = parseFloat(height);
     const floatWeight = parseFloat(weight);
+    const floatGoal = parseFloat(goal);
 
     if (password !== confPassword) {
       setMessage("Passwords do not match!");
@@ -41,6 +43,7 @@ const SignUp = () => {
           confPassword,
           floatHeight,
           floatWeight,
+          floatGoal,
         },
         {
           headers: {
@@ -133,6 +136,18 @@ const SignUp = () => {
               placeholder="Weight in kgs"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Goal:</Form.Label>
+            <Form.Control
+              type="number"
+              step="0.01"
+              placeholder="Goal(Cal to Burn)"
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
               required
             />
           </Form.Group>

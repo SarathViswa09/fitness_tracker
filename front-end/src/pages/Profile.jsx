@@ -7,6 +7,7 @@ const Profile = () => {
   const [userEmail, setUserEmail] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
+  const [goal, setGoal] = useState("");
   const [updateStatus, setUpdateStatus] = useState("");
 
   useEffect(() => {
@@ -19,6 +20,7 @@ const Profile = () => {
         setUserEmail(data.email);
         setHeight(data.h);
         setWeight(data.w);
+        setGoal(data.g);
       })
       .catch((error) => console.error("Error fetching profile:", error));
   }, []);
@@ -43,6 +45,7 @@ const Profile = () => {
           userEmail,
           height,
           weight,
+          goal,
         }),
       });
 
@@ -149,6 +152,20 @@ const Profile = () => {
           />
         ) : (
           weight
+        )}
+      </div>
+
+      <div className="profile-field">
+        <strong>Goal: </strong>
+        {isEditing ? (
+          <input
+            type="text"
+            name="goal"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+          />
+        ) : (
+          goal
         )}
       </div>
 
