@@ -61,105 +61,262 @@ const Profile = () => {
     }, 3000);
   };
 
+  // Improved Styles
+  const containerStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    maxWidth: "700px",
+    margin: "50px auto",
+    padding: "30px",
+    backgroundColor: "#fff",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    fontFamily: "'Arial', sans-serif",
+    lineHeight: "1.6",
+  };
+
+  const headingStyle = {
+    fontSize: "2rem",
+    fontWeight: "700",
+    color: "#333",
+    marginBottom: "30px",
+    textAlign: "center",
+  };
+
+  const profileFieldStyle = {
+    marginBottom: "20px",
+    width: "100%",
+    fontSize: "1rem",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px",
+  };
+
+  const labelStyle = {
+    fontWeight: "600",
+    color: "#333",
+    marginRight: "15px",
+    minWidth: "120px",
+  };
+
+  const inputStyle = {
+    padding: "10px 15px",
+    fontSize: "1rem",
+    width: "70%",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    backgroundColor: "#f5f5f5",
+    transition: "border-color 0.3s",
+  };
+
+  const inputFocusStyle = {
+    borderColor: "#007bff",
+    backgroundColor: "#fff",
+  };
+
+  const buttonStyle = {
+    backgroundColor: "#007bff",
+    color: "#fff",
+    padding: "12px 25px",
+    fontSize: "1.1rem",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+    transition: "background-color 0.3s, transform 0.3s",
+  };
+
+  const buttonHoverStyle = {
+    backgroundColor: "#0056b3",
+    transform: "scale(1.05)",
+  };
+
+  const statusMessageStyle = {
+    marginBottom: "20px",
+    padding: "12px",
+    borderRadius: "8px",
+    textAlign: "center",
+    fontWeight: "600",
+    color: "#fff",
+  };
+
+  const successStyle = {
+    backgroundColor: "#28a745",
+  };
+
+  const errorStyle = {
+    backgroundColor: "#dc3545",
+  };
+
   return (
-    <div className="profile-container">
-      <h3>User Profile</h3>
+    <div style={containerStyle}>
+      <h3 style={headingStyle}>User Profile</h3>
       {updateStatus && (
         <div
-          className={`status-message ${
-            updateStatus.includes("Error") ? "error" : "success"
-          }`}
+          style={{
+            ...statusMessageStyle,
+            ...(updateStatus.includes("Error") ? errorStyle : successStyle),
+          }}
         >
           {updateStatus}
         </div>
       )}
-      <div className="profile-field">
-        <strong>First Name: </strong>
+
+      <div style={profileFieldStyle}>
+        <label htmlFor="firstName" style={labelStyle}>
+          First Name:
+        </label>
         {isEditing ? (
           <input
+            id="firstName"
             type="text"
             name="firstName"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            style={inputStyle}
+            onFocus={(e) =>
+              (e.target.style = { ...inputStyle, ...inputFocusStyle })
+            }
           />
         ) : (
-          firstName
+          <span>{firstName}</span>
         )}
       </div>
-      <div className="profile-field">
-        <strong>Last Name: </strong>
+
+      <div style={profileFieldStyle}>
+        <label htmlFor="lastName" style={labelStyle}>
+          Last Name:
+        </label>
         {isEditing ? (
           <input
+            id="lastName"
             type="text"
             name="lastName"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            style={inputStyle}
+            onFocus={(e) =>
+              (e.target.style = { ...inputStyle, ...inputFocusStyle })
+            }
           />
         ) : (
-          lastName
+          <span>{lastName}</span>
         )}
       </div>
-      <div className="profile-field">
-        <strong>Email: </strong>
+
+      <div style={profileFieldStyle}>
+        <label htmlFor="userEmail" style={labelStyle}>
+          Email:
+        </label>
         {isEditing ? (
           <input
+            id="userEmail"
             type="email"
             name="email"
             value={userEmail}
             onChange={(e) => setUserEmail(e.target.value)}
+            style={inputStyle}
+            onFocus={(e) =>
+              (e.target.style = { ...inputStyle, ...inputFocusStyle })
+            }
           />
         ) : (
-          userEmail
+          <span>{userEmail}</span>
         )}
       </div>
-      <div className="profile-field">
-        <strong>Height: </strong>
+
+      <div style={profileFieldStyle}>
+        <label htmlFor="height" style={labelStyle}>
+          Height:
+        </label>
         {isEditing ? (
           <input
+            id="height"
             type="text"
             name="height"
             value={height}
             onChange={(e) => setHeight(e.target.value)}
+            style={inputStyle}
+            onFocus={(e) =>
+              (e.target.style = { ...inputStyle, ...inputFocusStyle })
+            }
           />
         ) : (
-          height
+          <span>{height}</span>
         )}
       </div>
-      <div className="profile-field">
-        <strong>Weight: </strong>
+
+      <div style={profileFieldStyle}>
+        <label htmlFor="weight" style={labelStyle}>
+          Weight:
+        </label>
         {isEditing ? (
           <input
+            id="weight"
             type="text"
             name="weight"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
+            style={inputStyle}
+            onFocus={(e) =>
+              (e.target.style = { ...inputStyle, ...inputFocusStyle })
+            }
           />
         ) : (
-          weight
+          <span>{weight}</span>
         )}
       </div>
 
-      <div className="profile-field">
-        <strong>Goal: </strong>
+      <div style={profileFieldStyle}>
+        <label htmlFor="goal" style={labelStyle}>
+          Goal:
+        </label>
         {isEditing ? (
           <input
+            id="goal"
             type="text"
             name="goal"
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
+            style={inputStyle}
+            onFocus={(e) =>
+              (e.target.style = { ...inputStyle, ...inputFocusStyle })
+            }
           />
         ) : (
-          goal
+          <span>{goal}</span>
         )}
       </div>
 
-      <div className="edit-button">
+      <div>
         {isEditing ? (
-          <button className="user-btn" onClick={handleSaveClick}>
+          <button
+            style={buttonStyle}
+            onClick={handleSaveClick}
+            onMouseEnter={(e) =>
+              (e.target.style.backgroundColor =
+                buttonHoverStyle.backgroundColor)
+            }
+            onMouseLeave={(e) =>
+              (e.target.style.backgroundColor = buttonStyle.backgroundColor)
+            }
+          >
             Save
           </button>
         ) : (
-          <button className="user-btn" onClick={handleEditClick}>
+          <button
+            style={buttonStyle}
+            onClick={handleEditClick}
+            onMouseEnter={(e) =>
+              (e.target.style.backgroundColor =
+                buttonHoverStyle.backgroundColor)
+            }
+            onMouseLeave={(e) =>
+              (e.target.style.backgroundColor = buttonStyle.backgroundColor)
+            }
+          >
             Edit
           </button>
         )}

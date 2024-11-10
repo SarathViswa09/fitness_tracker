@@ -55,7 +55,7 @@ const Sidebar = ({ children }) => {
             className="link"
             activeclassName="active"
           >
-            <div className="icon">{item.icon}</div>
+            <div className={item.name}>{item.icon}</div>
             <div
               style={{ display: isOpen ? "block" : "none" }}
               className="link_text"
