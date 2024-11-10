@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Graph from "../components/Graph";
 
 const Statistics = () => {
-  const [results, setResults] = useState("");
+  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const getResults = () => {
@@ -11,6 +11,7 @@ const Statistics = () => {
     fetch("/workout/results")
       .then((response) => response.json())
       .then((data) => {
+        console.log("Fetched Results:", data); // Log to inspect data structure
         setResults(data);
         setLoading(false);
       })
@@ -33,11 +34,16 @@ const Statistics = () => {
         </Button>
         {loading && <div>Loading...</div>}
         {results && (
-          <div>
-            <h2 className="homeH1">
-              <ul>Results:</ul>
-            </h2>
-            {<Graph results={results} />}
+          <div className="results-container">
+            <h2 className="homeH1">Results:</h2>
+            <div className="graph-container">
+              <div className="graph-section">
+                <Graph results={results.filter((item) => item.category === "cardio")} title="Cardio Calories Burned by Date" chartRefId="cardioChartRef" />
+              </div>
+              <div className="graph-section">
+                <Graph results={results.filter((item) => item.category === "workout")} title="Workout Calories Burned by Date" chartRefId="workoutChartRef" />
+              </div>
+            </div>
           </div>
         )}
       </div>

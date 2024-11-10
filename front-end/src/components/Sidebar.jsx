@@ -36,6 +36,11 @@ const Sidebar = ({ children }) => {
       name: "WorkOut",
       icon: <CgGym />,
     },
+    {
+      path: "/tips",
+      name: "Details",
+      icon: <TbListDetails />,
+    },
   ];
   return (
     <div className="contain">
