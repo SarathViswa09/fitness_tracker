@@ -22,7 +22,7 @@ const Statistics = () => {
 
   return (
     <>
-      <div>
+      <div className="display_stats">
         <Button
           variant="secondary"
           type="button"

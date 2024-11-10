@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import Header from "../components/Header";
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -64,7 +63,11 @@ const SignUp = () => {
 
   return (
     <>
-      <Header />
+      <header>
+        <div className="header">
+          <b style={{ color: "#0069aa" }}>Fitness Tracker</b>
+        </div>
+      </header>
       <div className="login-container">
         <div className="login-box">
           <Form.Group className="mb-3">
@@ -161,8 +164,19 @@ const SignUp = () => {
           >
             <b>Sign Up</b>
           </Button>
-
           {message && <div className="alert alert-info mt-3">{message}</div>}
+          <p>
+            Already have an account?
+            <a
+              href="http://localhost:3000/"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.reload();
+              }}
+            >
+              Click here to login
+            </a>
+          </p>
         </div>
       </div>
     </>

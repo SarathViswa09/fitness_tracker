@@ -127,7 +127,12 @@ const WorkOut = () => {
       </Form>
       <br />
       <div>
-        <Button variant="secondary" type="button" onClick={getResults}>
+        <Button
+          variant="secondary"
+          className="get_history"
+          type="button"
+          onClick={getResults}
+        >
           <b>Get history</b>
         </Button>
         {loading && <div>Loading...</div>}
@@ -147,11 +152,16 @@ const WorkOut = () => {
               <tbody>
                 {results.map((item, index) => (
                   <tr key={index}>
-                    <td style={{ textAlign: "center" }}>{new Date(item.today_date).toLocaleDateString()}</td>
-                    <td style={{ textAlign: "center" }}>{item.category}</td> {/* Display category */}
+                    <td style={{ textAlign: "center" }}>
+                      {new Date(item.today_date).toLocaleDateString()}
+                    </td>
+                    <td style={{ textAlign: "center" }}>{item.category}</td>{" "}
+                    {/* Display category */}
                     <td style={{ textAlign: "center" }}>{item.type}</td>
                     <td style={{ textAlign: "center" }}>{item.duration}</td>
-                    <td style={{ textAlign: "center" }}>{item.caloriesBurned}</td>
+                    <td style={{ textAlign: "center" }}>
+                      {item.caloriesBurned}
+                    </td>
                   </tr>
                 ))}
               </tbody>

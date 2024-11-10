@@ -42,21 +42,25 @@ const Login = ({ onLogin }) => {
     return <SignUp />;
   }
 
-
   if (showForgotPassword) {
     return <ForgotPassword />;
   }
 
   return (
     <>
-    <header>
-      <div className="header">
-        <b style={{ color: "#0069aa" }}>Fitness Tracker</b>
-      </div>
-    </header>
+      <header>
+        <div className="header">
+          <b style={{ color: "#0069aa" }}>Fitness Tracker</b>
+        </div>
+      </header>
       <div className="login-container">
         <div className="login-box">
-          <Form>
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault();
+              submitHandler();
+            }}
+          >
             <Form.Group className="mb-3">
               <Form.Label>Email ID:</Form.Label>
               <Form.Control
@@ -82,6 +86,7 @@ const Login = ({ onLogin }) => {
             <p>
               Don't have an account?{" "}
               <span
+                className="disp_signup"
                 style={{
                   cursor: "pointer",
                   color: "blue",
