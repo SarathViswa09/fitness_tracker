@@ -3,6 +3,6 @@ If OS is windows, navigate to fitness_tracker/front-end and run the following co
 `npm start & node ../back-end/components/backend.js`
 
 In order to run the automation scripts:
-navigate to Automation/ folder and run the following commands:
+navigate to `cd Automation/` folder and run the following commands:
 `javac -cp "../selenium-java-4.26.0/*" LoginTest.java` and then
 `java -cp "../selenium-java-4.26.0/*" LoginTest.java`
