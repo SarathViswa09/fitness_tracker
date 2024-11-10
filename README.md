@@ -4,5 +4,5 @@ If OS is windows, navigate to fitness_tracker/front-end and run the following co
 
 In order to run the automation scripts:
 navigate to Automation/ folder and run the following commands:
-`javac -cp "../selenium-java-4.26.0/*" LoginTest.java`
+`javac -cp "../selenium-java-4.26.0/*" LoginTest.java` and then
 `java -cp "../selenium-java-4.26.0/*" LoginTest.java`
