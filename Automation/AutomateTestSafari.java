@@ -3,10 +3,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.safari.SafariDriver;
 
-public class LoginTest {
+public class AutomateTestSafari {
     private WebDriver driver;
 
-    public LoginTest() {
+    public AutomateTestSafari() {
         driver = new SafariDriver();
     }
 
@@ -194,7 +194,7 @@ public class LoginTest {
     }
 
     public static void main(String[] args) {
-        LoginTest lt = new LoginTest();
+        AutomateTestSafari lt = new AutomateTestSafari();
         lt.testLogin("bob@mavs.edu", "admin");
         lt.getFlipCardValue();
         lt.navigateToUserProfile();
