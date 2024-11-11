@@ -18,6 +18,26 @@ const Home = () => {
   useEffect(() => {
     fetchUserData();
     fetchWorkoutResults();
+
+    // Function to calculate milliseconds until midnight
+    const calculateTimeToMidnight = () => {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0); // Set time to midnight
+      return midnight - now; // Milliseconds until midnight
+    };
+
+    // Refresh at midnight
+    const timeToMidnight = calculateTimeToMidnight();
+    const midnightTimeout = setTimeout(() => {
+      fetchWorkoutResults(); // Fetch new data at midnight
+
+      // Set an interval to repeat the fetch every 24 hours after midnight
+      setInterval(fetchWorkoutResults, 24 * 60 * 60 * 1000); // 24 hours in ms
+    }, timeToMidnight);
+
+    // Clear the timeout when the component is unmounted
+    return () => clearTimeout(midnightTimeout);
   }, []);
 
   const fetchUserData = async () => {
@@ -37,39 +57,49 @@ const Home = () => {
     try {
       const response = await fetch("/workout/results");
       const data = await response.json();
-
-      const totalCalories = data.reduce((acc, item) => acc + item.caloriesBurned, 0);
+  
+      // Find the latest date in the data array
+      const latestDate = data
+        .map((item) => new Date(item.today_date))
+        .reduce((max, date) => (date > max ? date : max), new Date(0))
+        .toISOString()
+        .split("T")[0]; // Format as 'YYYY-MM-DD'
+  
+      // Filter data for the latest date
+      const latestData = data.filter(
+        (item) => new Date(item.today_date).toISOString().split("T")[0] === latestDate
+      );
+  
+      const totalCalories = latestData.reduce((acc, item) => acc + item.caloriesBurned, 0);
       setTotalCaloriesBurned(totalCalories);
-
-      const today = new Date().toISOString().split("T")[0];
-      const todayData = data.filter((item) => new Date(item.today_date).toISOString().split("T")[0] === today);
-
-      const cardio = todayData.filter((item) => item.category === "cardio");
-      const workout = todayData.filter((item) => item.category === "workout");
-
+  
+      const cardio = latestData.filter((item) => item.category === "cardio");
+      const workout = latestData.filter((item) => item.category === "workout");
+  
       setCardioData(cardio);
       setWorkoutData(workout);
-
+  
       const cardioCaloriesArray = Object.entries(
         cardio.reduce((acc, item) => {
           acc[item.type] = (acc[item.type] || 0) + item.caloriesBurned;
           return acc;
         }, {})
       ).map(([type, calories]) => ({ type, calories }));
-
+  
       const workoutCaloriesArray = Object.entries(
         workout.reduce((acc, item) => {
           acc[item.type] = (acc[item.type] || 0) + item.caloriesBurned;
           return acc;
         }, {})
       ).map(([type, calories]) => ({ type, calories }));
-
+  
       setCardioCategoryData(cardioCaloriesArray);
       setWorkoutCategoryData(workoutCaloriesArray);
     } catch (error) {
       console.error("Error fetching workout results data:", error);
     }
   };
+  
 
   const progressPercentage = goal ? Math.min((totalCaloriesBurned / goal) * 100, 100) : 0;
 
@@ -94,8 +124,8 @@ const Home = () => {
           className="card"
           onClick={handleFlip}
           style={{
-            backgroundColor: "#B3D8FF", // Light blue for the BMI card
-            color: "#0056b3", // Darker text color
+            backgroundColor: "#B3D8FF",
+            color: "#0056b3",
             padding: "20px",
             textAlign: "center",
             cursor: "pointer",
@@ -111,8 +141,8 @@ const Home = () => {
           now={progressPercentage}
           label={`${progressPercentage.toFixed(2)}%`}
           style={{
-            backgroundColor: "#E0F0FF", // Very light blue background
-            color: "#0056b3", // Dark blue text
+            backgroundColor: "#E0F0FF",
+            color: "#0056b3",
             height: "20px",
             borderRadius: "10px",
           }}

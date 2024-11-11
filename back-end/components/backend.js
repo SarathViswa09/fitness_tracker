@@ -118,7 +118,7 @@ app.get("/user/profile", (req, res) => {
 
 
 app.post("/workout", (req, res) => {
-  const { duration, category, type } = req.body; 
+  const { duration, category, type } = req.body;
   const email = userDetails[0].email;
   const createQuery = `
     CREATE TABLE IF NOT EXISTS workout (
