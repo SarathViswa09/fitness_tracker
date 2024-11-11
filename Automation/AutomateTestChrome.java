@@ -199,7 +199,7 @@ public class AutomateTestChrome {
 
     public static void main(String[] args) {
         AutomateTestChrome lt = new AutomateTestChrome();
-        lt.testLogin("bob@mavs.edu", "admin");
+        lt.testLogin("nxy@gmail.com", "Pass@456");
         lt.getFlipCardValue();
         lt.navigateToUserProfile();
         lt.navigateToStats();
