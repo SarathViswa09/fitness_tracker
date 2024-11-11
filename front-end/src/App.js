@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import Details from "./pages/Details";
-import HealthTips from "./pages/HealthTips";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
@@ -33,9 +31,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/stats" element={<Statistics />} />
-            <Route path="/details" element={<Details />} />
             <Route path="/workout" element={<WorkOut />} />
-            <Route path="/tips" element={<HealthTips />} />
           </Routes>
         </Sidebar>
       )}
