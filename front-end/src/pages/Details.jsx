@@ -1,20 +1,20 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
-import benchpress from './bench.png';
-import bicepcurl from './bicepcurl.png';
 import cardioImage from './cardio2.png';
-import crunches from './crunches.png';
-import cycling from './cycling.png';
-import deadlift from './deadlift.png';
 import './Details.css';
-import lunges from './lunges.png';
-import plank from './plank.png';
-import pullup from './pullup.png';
-import pushup from './pushup.png';
-import runningImage from './running.png';
-import squats from './squat.png';
-import swiming from './swiming.png';
-import tricep from './tricep.png';
+import benchpress from './images/bench.png';
+import bicepcurl from './images/bicepcurl.png';
+import crunches from './images/crunches.png';
+import cycling from './images/cycling.png';
+import deadlift from './images/deadlift.png';
+import lunges from './images/lunges.png';
+import plank from './images/plank.png';
+import pullup from './images/pullup.png';
+import pushup from './images/pushup.png';
+import runningImage from './images/running.png';
+import squats from './images/squat.png';
+import swiming from './images/swiming.png';
+import tricep from './images/tricep.png';
 import workoutImage from './workout.png';
 
 const cardioExercises = [

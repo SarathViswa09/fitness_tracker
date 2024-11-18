@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect, useState } from "react";
 import { ProgressBar } from "react-bootstrap";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const Home = () => {
@@ -19,35 +21,57 @@ const Home = () => {
     fetchUserData();
     fetchWorkoutResults();
 
-    // Function to calculate milliseconds until midnight
     const calculateTimeToMidnight = () => {
       const now = new Date();
       const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0); // Set time to midnight
-      return midnight - now; // Milliseconds until midnight
+      midnight.setHours(24, 0, 0, 0);
+      return midnight - now;
     };
 
-    // Refresh at midnight
     const timeToMidnight = calculateTimeToMidnight();
     const midnightTimeout = setTimeout(() => {
-      fetchWorkoutResults(); // Fetch new data at midnight
+      fetchWorkoutResults();
 
-      // Set an interval to repeat the fetch every 24 hours after midnight
-      setInterval(fetchWorkoutResults, 24 * 60 * 60 * 1000); // 24 hours in ms
+      setInterval(fetchWorkoutResults, 24 * 60 * 60 * 1000);
     }, timeToMidnight);
 
-    // Clear the timeout when the component is unmounted
     return () => clearTimeout(midnightTimeout);
   }, []);
+
+  useEffect(() => {
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  
+    const triggerNotification = async () => {
+      await sleep(500);
+  
+      if (goal && totalCaloriesBurned > 0) {
+        const progressPercentage = Math.min((totalCaloriesBurned / goal) * 100, 100);
+  
+        if (progressPercentage === 100) {
+          toast.success("🎉 Congratulations! You've achieved your daily calorie burn goal!", {
+            position: "top-right",
+          });
+        } else {
+          toast.info(`Your progress today: ${Math.round(progressPercentage)}%`, {
+            position: "top-right",
+          });
+        }
+      }
+    };
+  
+    triggerNotification();
+  }, [totalCaloriesBurned, goal]);
+  
+  
 
   const fetchUserData = async () => {
     try {
       const response = await fetch("/user/name");
       const data = await response.json();
       setUserName(data.name);
-      setHeight(data.h);
-      setWeight(data.w);
-      setGoal(data.g);
+      setHeight(Math.round(data.h));
+      setWeight(Math.round(data.w));
+      setGoal(Math.round(data.g));
     } catch (error) {
       console.error("Error fetching username:", error);
     }
@@ -57,49 +81,46 @@ const Home = () => {
     try {
       const response = await fetch("/workout/results");
       const data = await response.json();
-  
-      // Find the latest date in the data array
+
       const latestDate = data
         .map((item) => new Date(item.today_date))
         .reduce((max, date) => (date > max ? date : max), new Date(0))
         .toISOString()
-        .split("T")[0]; // Format as 'YYYY-MM-DD'
-  
-      // Filter data for the latest date
+        .split("T")[0];
+
       const latestData = data.filter(
         (item) => new Date(item.today_date).toISOString().split("T")[0] === latestDate
       );
-  
+
       const totalCalories = latestData.reduce((acc, item) => acc + item.caloriesBurned, 0);
-      setTotalCaloriesBurned(totalCalories);
-  
+      setTotalCaloriesBurned(Math.round(totalCalories));
+
       const cardio = latestData.filter((item) => item.category === "cardio");
       const workout = latestData.filter((item) => item.category === "workout");
-  
+
       setCardioData(cardio);
       setWorkoutData(workout);
-  
+
       const cardioCaloriesArray = Object.entries(
         cardio.reduce((acc, item) => {
           acc[item.type] = (acc[item.type] || 0) + item.caloriesBurned;
           return acc;
         }, {})
-      ).map(([type, calories]) => ({ type, calories }));
-  
+      ).map(([type, calories]) => ({ type, calories: Math.round(calories) }));
+
       const workoutCaloriesArray = Object.entries(
         workout.reduce((acc, item) => {
           acc[item.type] = (acc[item.type] || 0) + item.caloriesBurned;
           return acc;
         }, {})
-      ).map(([type, calories]) => ({ type, calories }));
-  
+      ).map(([type, calories]) => ({ type, calories: Math.round(calories) }));
+
       setCardioCategoryData(cardioCaloriesArray);
       setWorkoutCategoryData(workoutCaloriesArray);
     } catch (error) {
       console.error("Error fetching workout results data:", error);
     }
   };
-  
 
   const progressPercentage = goal ? Math.min((totalCaloriesBurned / goal) * 100, 100) : 0;
 
@@ -108,7 +129,7 @@ const Home = () => {
   const calculateBMI = (h, w) => {
     let hm = h / 100;
     const BMI = w / (hm * hm);
-    return parseFloat(BMI.toFixed(2));
+    return Math.round(BMI);
   };
 
   const question = "Click here to view your BMI";
@@ -118,6 +139,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
+      <ToastContainer />
       <div className="home-header">
         <h1>Welcome {userName}</h1>
         <div
@@ -138,8 +160,8 @@ const Home = () => {
       <div className="progress-section" style={{ marginTop: "20px" }}>
         <h3>Total Calories Burned Progress</h3>
         <ProgressBar
-          now={progressPercentage}
-          label={`${progressPercentage.toFixed(2)}%`}
+          now={Math.round(progressPercentage)}
+          label={`${Math.round(progressPercentage)}%`}
           style={{
             backgroundColor: "#E0F0FF",
             color: "#0056b3",
@@ -236,3 +258,7 @@ const Home = () => {
 };
 
 export default Home;
+
+
+
+

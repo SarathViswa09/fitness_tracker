@@ -11,7 +11,7 @@ const Statistics = () => {
     fetch("/workout/results")
       .then((response) => response.json())
       .then((data) => {
-        console.log("Fetched Results:", data); // Log to inspect data structure
+        console.log("Fetched Results:", data);
         setResults(data);
         setLoading(false);
       })

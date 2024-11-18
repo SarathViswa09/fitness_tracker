@@ -1,11 +1,10 @@
-// HealthTips.js
 import React from "react";
 import { Col, Container, Image, Row } from "react-bootstrap";
 import "../App.css";
-import balancedDietImage from "./balanced_diet.png";
-import exerciseImage from "./exercise.png";
-import sleepImage from "./sleep.png";
-import waterImage from "./water.png";
+import balancedDietImage from "./images/balanced_diet.png";
+import exerciseImage from "./images/exercise.png";
+import sleepImage from "./images/sleep.png";
+import waterImage from "./images/water.png";
 
 const HealthTips = () => {
   return (

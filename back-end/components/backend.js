@@ -64,16 +64,16 @@ app.post("/login", (req, res) => {
 
 
 app.post("/signup", (req, res) => {
-  const { firstName, lastName, email, confPassword, floatHeight, floatWeight, floatGoal} =
+  const { firstName, lastName, mobnum, email, confPassword, floatHeight, floatWeight, floatGoal} =
     req.body;
-  const createQuery =
-    "CREATE TABLE IF NOT EXISTS signup (first_name VARCHAR(30) NOT NULL,last_name VARCHAR(30) NOT NULL,email VARCHAR(50) NOT NULL PRIMARY KEY,password VARCHAR(50) NOT NULL,height FLOAT,weight FLOAT,goal FLOAT);";
+  /* const createQuery =
+    "CREATE TABLE IF NOT EXISTS signup (first_name VARCHAR(30) NOT NULL,last_name VARCHAR(30) NOT NULL,email VARCHAR(50) NOT NULL PRIMARY KEY,password VARCHAR(50) NOT NULL,height FLOAT,weight FLOAT,goal FLOAT);"; */
   connection.query(createQuery);
   const query =
-    "INSERT INTO signup (first_name, last_name, email, password, height, weight, goal) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO signup (first_name, last_name, mobnum, email, password, height, weight, goal) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
   connection.query(
     query,
-    [firstName, lastName, email, confPassword, floatHeight, floatWeight, floatGoal],
+    [firstName, lastName, email, mobnum, confPassword, floatHeight, floatWeight, floatGoal],
     (err, results) => {
       if (err) {
         console.error("Error executing query:", err);
@@ -96,23 +96,40 @@ app.get("/user/name", (req, res) => {
 });
 
 app.get("/user/profile", (req, res) => {
-  let firstName = userDetails[0].first_name;
-  let lastName = userDetails[0].last_name;
-  let user_password = userDetails[0].password;
-  let uEmail = userDetails[0].email;
-  let userHeight = userDetails[0].height;
-  let userWeight = userDetails[0].weight;
-  let userGoal = userDetails[0].goal
-  res.json({
-    userFname: firstName,
-    userLname: lastName,
-    userPassword: user_password,
-    email: uEmail,
-    h: userHeight,
-    w: userWeight,
-    g: userGoal
+  const email = userDetails[0]?.email;
+
+  if (!email) {
+    res.status(400).send("User not logged in.");
+    return;
+  }
+
+  const query = "SELECT * FROM signup WHERE email = ?";
+  connection.query(query, [email], (err, results) => {
+    if (err) {
+      console.error("Error fetching user profile:", err);
+      res.status(500).send("Error fetching user profile");
+      return;
+    }
+
+    if (results.length > 0) {
+      const user = results[0];
+      global.userDetails = [user];
+      res.json({
+        userFname: user.first_name,
+        userLname: user.last_name,
+        userPassword: user.password,
+        email: user.email,
+        mobnum: user.mobnum,
+        h: user.height,
+        w: user.weight,
+        g: user.goal,
+      });
+    } else {
+      res.status(404).send("User not found.");
+    }
   });
 });
+
 
 
 
@@ -120,66 +137,51 @@ app.get("/user/profile", (req, res) => {
 app.post("/workout", (req, res) => {
   const { duration, category, type } = req.body;
   const email = userDetails[0].email;
-  const createQuery = `
-    CREATE TABLE IF NOT EXISTS workout (
-      today_date DATE DEFAULT CURDATE(),
-      duration INT(3),
-      category VARCHAR(20),
-      type VARCHAR(20),
-      email VARCHAR(50),
-      caloriesBurned FLOAT
-    );
-  `;
-  connection.query(createQuery, (err) => {
+
+  const weightQuery = "SELECT weight FROM signup WHERE email = ?";
+  connection.query(weightQuery, [email], (err, weightResults) => {
     if (err) {
-      console.error("Error creating table:", err);
-      res.status(500).send("Error creating table");
+      console.error("Error fetching user weight:", err);
+      res.status(500).send("Error fetching user weight");
       return;
     }
 
-    const weightQuery = "SELECT weight FROM signup WHERE email = ?";
-    connection.query(weightQuery, [email], (err, weightResults) => {
+    if (weightResults.length === 0) {
+      res.status(404).send("User weight not found");
+      return;
+    }
+
+    const weight = weightResults[0].weight;
+    const MET_VALUES = {
+      running: 9.8,
+      swimming: 6.0,
+      cycling: 7.5,
+      chestWorkout: 3.5,
+      legsWorkout: 4.0,
+      absWorkout: 3.8,
+      backWorkout: 4.0,
+      armsWorkout: 3.0,
+    };
+
+    const durationHours = duration / 60;
+    const MET = MET_VALUES[type] || 1;
+    const caloriesBurned = MET * weight * durationHours;
+
+    const insertQuery = `
+      INSERT INTO workout (duration, category, type, email, caloriesBurned)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    connection.query(insertQuery, [duration, category, type, email, caloriesBurned], (err, results) => {
       if (err) {
-        console.error("Error fetching user weight:", err);
-        res.status(500).send("Error fetching user weight");
+        console.error("Error logging workout:", err);
+        res.status(500).send("Error logging workout");
         return;
       }
-
-      if (weightResults.length === 0) {
-        res.status(404).send("User weight not found");
-        return;
-      }
-
-      const weight = weightResults[0].weight;
-      const MET_VALUES = {
-        running: 9.8,
-        swimming: 6.0,
-        cycling: 7.5,
-        chestWorkout: 3.5,
-        legsWorkout: 4.0,
-        absWorkout: 3.8,
-        backWorkout: 4.0,
-        armsWorkout: 3.0,
-      };
-
-      const durationHours = duration / 60;
-      const MET = MET_VALUES[type] || 1;
-      const caloriesBurned = MET * weight * durationHours;
-      const insertQuery = `
-        INSERT INTO workout (duration, category, type, email, caloriesBurned)
-        VALUES (?, ?, ?, ?, ?)
-      `;
-      connection.query(insertQuery, [duration, category, type, email, caloriesBurned], (err, results) => {
-        if (err) {
-          console.error("Error executing query:", err);
-          res.status(500).send("Error executing query");
-          return;
-        }
-        res.status(200).send("Workout logged successfully");
-      });
+      res.status(200).send("Workout logged successfully");
     });
   });
 });
+
 
 app.get("/workout/results", (req, res) => {
   if (!userDetails || !userDetails[0] || !userDetails[0].email) {
@@ -189,7 +191,7 @@ app.get("/workout/results", (req, res) => {
 
   const email = userDetails[0].email;
 
-  const workoutQuery = "SELECT today_date, category, type, duration, caloriesBurned FROM workout WHERE email = ?";
+  const workoutQuery = "SELECT id, today_date, category, type, duration, caloriesBurned FROM workout WHERE email = ?";
   connection.query(workoutQuery, [email], (err, workoutResults) => {
     if (err) {
       console.error("Error fetching workout data:", err);
@@ -202,10 +204,30 @@ app.get("/workout/results", (req, res) => {
 });
 
 
-app.put("/user/profile/update", (req, res) => {
-  console.log("Received update request:", req.body); 
+app.delete("/workout/:id", (req, res) => {
+  const workoutId = req.params.id;
 
-  const { firstName, lastName, userEmail, height, weight, goal} =
+  const deleteQuery = "DELETE FROM workout WHERE id = ?";
+  connection.query(deleteQuery, [workoutId], (err, results) => {
+    if (err) {
+      console.error("Error deleting workout entry:", err);
+      res.status(500).send("Error deleting workout entry");
+      return;
+    }
+
+    if (results.affectedRows === 0) {
+      res.status(404).send("Workout entry not found");
+    } else {
+      res.status(200).send("Workout entry deleted successfully");
+    }
+  });
+});
+
+
+app.put("/user/profile/update", (req, res) => {
+  console.log("Received update request:", req.body);
+
+  const { firstName, lastName, userEmail, userMobnum,  height, weight, goal} =
     req.body;
   const currentEmail = userDetails[0].email;
 
@@ -214,6 +236,7 @@ app.put("/user/profile/update", (req, res) => {
     SET first_name = ?,
         last_name = ?,
         email = ?,
+        mobnum =?,
         height = ?,
         weight = ?,
         goal = ?
@@ -225,6 +248,7 @@ app.put("/user/profile/update", (req, res) => {
       firstName,
       lastName,
       userEmail,
+      userMobnum,
       height,
       weight,
       goal,
@@ -242,6 +266,7 @@ app.put("/user/profile/update", (req, res) => {
         first_name: firstName,
         last_name: lastName,
         email: userEmail,
+        mobnum: userMobnum,
         height: height,
         weight: weight,
         goal: goal,

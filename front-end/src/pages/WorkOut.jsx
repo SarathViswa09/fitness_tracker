@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const WorkOut = () => {
   const [duration, setDuration] = useState("");
@@ -16,7 +18,7 @@ const WorkOut = () => {
         "/workout",
         {
           duration,
-          category, // Include category in the request
+          category,
           type,
         },
         {
@@ -26,12 +28,29 @@ const WorkOut = () => {
           withCredentials: true,
         }
       );
-      alert("Workout logged successfully!");
+
+      toast.success("Workout logged successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
       setDuration("");
       setCategory("");
       setType("");
+      getResults();
     } catch (error) {
-      alert("Error submitting workout: " + error.message);
+      toast.error("Error submitting workout: " + error.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
@@ -45,17 +64,58 @@ const WorkOut = () => {
         return response.json();
       })
       .then((data) => {
-        setResults(data);
+        const sortedData = data.sort(
+          (a, b) => new Date(b.today_date) - new Date(a.today_date)
+        );
+        setResults(sortedData);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        alert("Error fetching workout history.");
+        toast.error("Error fetching workout history.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         setLoading(false);
       });
   };
+  
 
-  // Define options based on category
+  const deleteWorkout = async (id) => {
+    try {
+      await axios.delete(`/workout/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+
+      toast.success("Workout entry deleted successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      getResults();
+    } catch (error) {
+      toast.error("Error deleting workout: " + error.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+  };
+
   const cardioOptions = [
     { value: "running", label: "Running" },
     { value: "swimming", label: "Swimming" },
@@ -89,7 +149,7 @@ const WorkOut = () => {
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
-              setType(""); // Reset type when category changes
+              setType("");
             }}
           >
             <option value="">Select a category</option>
@@ -103,7 +163,7 @@ const WorkOut = () => {
           <Form.Select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            disabled={!category} // Disable if category is not selected
+            disabled={!category}
           >
             <option value="">Choose an activity below</option>
             {category === "cardio" &&
@@ -147,6 +207,7 @@ const WorkOut = () => {
                   <th style={{ textAlign: "center" }}>Type</th>
                   <th style={{ textAlign: "center" }}>Duration (minutes)</th>
                   <th style={{ textAlign: "center" }}>Calories Burned</th>
+                  <th style={{ textAlign: "center" }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -155,12 +216,20 @@ const WorkOut = () => {
                     <td style={{ textAlign: "center" }}>
                       {new Date(item.today_date).toLocaleDateString()}
                     </td>
-                    <td style={{ textAlign: "center" }}>{item.category}</td>{" "}
-                    {/* Display category */}
+                    <td style={{ textAlign: "center" }}>{item.category}</td>
                     <td style={{ textAlign: "center" }}>{item.type}</td>
                     <td style={{ textAlign: "center" }}>{item.duration}</td>
                     <td style={{ textAlign: "center" }}>
                       {item.caloriesBurned}
+                    </td>
+                    <td style={{ textAlign: "center" }}>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => deleteWorkout(item.id)}
+                      >
+                        Delete
+                      </Button>
                     </td>
                   </tr>
                 ))}
@@ -169,6 +238,7 @@ const WorkOut = () => {
           </div>
         )}
       </div>
+      <ToastContainer />
     </>
   );
 };

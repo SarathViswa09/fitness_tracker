@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [userMobnum, setUserMobnum] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [goal, setGoal] = useState("");
-  const [updateStatus, setUpdateStatus] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     fetch("/user/profile")
@@ -16,14 +19,13 @@ const Profile = () => {
         setFirstName(data.userFname);
         setLastName(data.userLname);
         setUserEmail(data.email);
+        setUserMobnum(data.mobnum);
         setHeight(data.h);
         setWeight(data.w);
         setGoal(data.g);
       })
       .catch((error) => console.error("Error fetching profile:", error));
   }, []);
-
-  const [isEditing, setIsEditing] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -40,6 +42,7 @@ const Profile = () => {
           firstName,
           lastName,
           userEmail,
+          userMobnum,
           height,
           weight,
           goal,
@@ -47,21 +50,23 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        setUpdateStatus("Profile updated successfully!");
+        toast.success("Profile updated successfully!", {
+          position: "top-right",
+        });
         setIsEditing(false);
       } else {
-        setUpdateStatus("Failed to update profile. Please try again.");
+        toast.error("Failed to update profile. Please try again.", {
+          position: "top-right",
+        });
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      setUpdateStatus("Error updating profile. Please try again.");
+      toast.error("Error updating profile. Please try again.", {
+        position: "top-right",
+      });
     }
-    setTimeout(() => {
-      setUpdateStatus("");
-    }, 3000);
   };
 
-  // Improved Styles
   const containerStyle = {
     display: "flex",
     flexDirection: "column",
@@ -112,11 +117,6 @@ const Profile = () => {
     transition: "border-color 0.3s",
   };
 
-  const inputFocusStyle = {
-    borderColor: "#007bff",
-    backgroundColor: "#fff",
-  };
-
   const buttonStyle = {
     backgroundColor: "#007bff",
     color: "#fff",
@@ -128,41 +128,12 @@ const Profile = () => {
     transition: "background-color 0.3s, transform 0.3s",
   };
 
-  const buttonHoverStyle = {
-    backgroundColor: "#0056b3",
-    transform: "scale(1.05)",
-  };
-
-  const statusMessageStyle = {
-    marginBottom: "20px",
-    padding: "12px",
-    borderRadius: "8px",
-    textAlign: "center",
-    fontWeight: "600",
-    color: "#fff",
-  };
-
-  const successStyle = {
-    backgroundColor: "#28a745",
-  };
-
-  const errorStyle = {
-    backgroundColor: "#dc3545",
-  };
-
   return (
     <div style={containerStyle}>
+      {/* Toast Container for Notifications */}
+      <ToastContainer />
+
       <h3 style={headingStyle}>User Profile</h3>
-      {updateStatus && (
-        <div
-          style={{
-            ...statusMessageStyle,
-            ...(updateStatus.includes("Error") ? errorStyle : successStyle),
-          }}
-        >
-          {updateStatus}
-        </div>
-      )}
 
       <div style={profileFieldStyle}>
         <label htmlFor="firstName" style={labelStyle}>
@@ -172,13 +143,9 @@ const Profile = () => {
           <input
             id="firstName"
             type="text"
-            name="firstName"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             style={inputStyle}
-            onFocus={(e) =>
-              (e.target.style = { ...inputStyle, ...inputFocusStyle })
-            }
           />
         ) : (
           <span>{firstName}</span>
@@ -193,13 +160,9 @@ const Profile = () => {
           <input
             id="lastName"
             type="text"
-            name="lastName"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             style={inputStyle}
-            onFocus={(e) =>
-              (e.target.style = { ...inputStyle, ...inputFocusStyle })
-            }
           />
         ) : (
           <span>{lastName}</span>
@@ -214,16 +177,29 @@ const Profile = () => {
           <input
             id="userEmail"
             type="email"
-            name="email"
             value={userEmail}
             onChange={(e) => setUserEmail(e.target.value)}
             style={inputStyle}
-            onFocus={(e) =>
-              (e.target.style = { ...inputStyle, ...inputFocusStyle })
-            }
           />
         ) : (
           <span>{userEmail}</span>
+        )}
+      </div>
+
+      <div style={profileFieldStyle}>
+        <label htmlFor="userMobnum" style={labelStyle}>
+          Mobile Number:
+        </label>
+        {isEditing ? (
+          <input
+            id="userMobnum"
+            type="text"
+            value={userMobnum}
+            onChange={(e) => setUserMobnum(e.target.value)}
+            style={inputStyle}
+          />
+        ) : (
+          <span>{userMobnum}</span>
         )}
       </div>
 
@@ -235,13 +211,9 @@ const Profile = () => {
           <input
             id="height"
             type="text"
-            name="height"
             value={height}
             onChange={(e) => setHeight(e.target.value)}
             style={inputStyle}
-            onFocus={(e) =>
-              (e.target.style = { ...inputStyle, ...inputFocusStyle })
-            }
           />
         ) : (
           <span>{height}</span>
@@ -256,13 +228,9 @@ const Profile = () => {
           <input
             id="weight"
             type="text"
-            name="weight"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
             style={inputStyle}
-            onFocus={(e) =>
-              (e.target.style = { ...inputStyle, ...inputFocusStyle })
-            }
           />
         ) : (
           <span>{weight}</span>
@@ -277,13 +245,9 @@ const Profile = () => {
           <input
             id="goal"
             type="text"
-            name="goal"
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
             style={inputStyle}
-            onFocus={(e) =>
-              (e.target.style = { ...inputStyle, ...inputFocusStyle })
-            }
           />
         ) : (
           <span>{goal}</span>
@@ -292,31 +256,11 @@ const Profile = () => {
 
       <div>
         {isEditing ? (
-          <button
-            style={buttonStyle}
-            onClick={handleSaveClick}
-            onMouseEnter={(e) =>
-              (e.target.style.backgroundColor =
-                buttonHoverStyle.backgroundColor)
-            }
-            onMouseLeave={(e) =>
-              (e.target.style.backgroundColor = buttonStyle.backgroundColor)
-            }
-          >
+          <button style={buttonStyle} onClick={handleSaveClick}>
             Save
           </button>
         ) : (
-          <button
-            style={buttonStyle}
-            onClick={handleEditClick}
-            onMouseEnter={(e) =>
-              (e.target.style.backgroundColor =
-                buttonHoverStyle.backgroundColor)
-            }
-            onMouseLeave={(e) =>
-              (e.target.style.backgroundColor = buttonStyle.backgroundColor)
-            }
-          >
+          <button style={buttonStyle} onClick={handleEditClick}>
             Edit
           </button>
         )}

@@ -28,7 +28,7 @@ const Sidebar = ({ children }) => {
     },
     {
       path: "/details",
-      name: "Details",
+      name: "Workout Plans",
       icon: <TbListDetails />,
     },
     {
@@ -38,7 +38,7 @@ const Sidebar = ({ children }) => {
     },
     {
       path: "/tips",
-      name: "Details",
+      name: "Health Tips",
       icon: <TbListDetails />,
     },
   ];

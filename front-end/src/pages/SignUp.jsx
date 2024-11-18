@@ -7,6 +7,7 @@ const SignUp = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [mobnum, setMobnum] = useState("");
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -48,7 +49,7 @@ const SignUp = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true, // Optional, if you are dealing with cookies or authentication
+          withCredentials: true,
         }
       );
       setMessage("Signup successful!");
@@ -96,6 +97,16 @@ const SignUp = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Mobile Number:</Form.Label>
+            <Form.Control
+              type="mobnum"
+              value={mobnum}
+              onChange={(e) => setMobnum(e.target.value)}
               required
             />
           </Form.Group>
