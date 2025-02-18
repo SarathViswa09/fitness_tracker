@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/fitness-tracker/static/css/main.0ef33d4a.css",
+    "main.js": "/fitness-tracker/static/js/main.456fc025.js",
+    "static/js/453.9537af23.chunk.js": "/fitness-tracker/static/js/453.9537af23.chunk.js",
+    "static/media/background.png": "/fitness-tracker/static/media/background.607335f60d187c368fea.png",
+    "static/media/balanced_diet.png": "/fitness-tracker/static/media/balanced_diet.ae814383ef28db41e9ba.png",
+    "static/media/water.png": "/fitness-tracker/static/media/water.755b4ff5d4bd4defb46e.png",
+    "static/media/workout.png": "/fitness-tracker/static/media/workout.03757480806c82378b12.png",
+    "static/media/bench.png": "/fitness-tracker/static/media/bench.1fa376b9de12aac58b10.png",
+    "static/media/plank.png": "/fitness-tracker/static/media/plank.5fa04e22bc6f872207ad.png",
+    "static/media/pushup.png": "/fitness-tracker/static/media/pushup.8ec4a37ba6b28c9668ac.png",
+    "static/media/cardio2.png": "/fitness-tracker/static/media/cardio2.88b97085d129cc904170.png",
+    "static/media/exercise.png": "/fitness-tracker/static/media/exercise.dc0fc4c06fc389ae083f.png",
+    "static/media/lunges.png": "/fitness-tracker/static/media/lunges.c6d5c8f110503badea41.png",
+    "static/media/cycling.png": "/fitness-tracker/static/media/cycling.716277efa24f68150a74.png",
+    "static/media/sleep.png": "/fitness-tracker/static/media/sleep.5e15eff3825ed2ab34a9.png",
+    "static/media/bicepcurl.png": "/fitness-tracker/static/media/bicepcurl.0f735ef9b6549d63cc41.png",
+    "static/media/running.png": "/fitness-tracker/static/media/running.aa0115910fab12717779.png",
+    "static/media/deadlift.png": "/fitness-tracker/static/media/deadlift.9364ab7b7124105777e4.png",
+    "static/media/crunches.png": "/fitness-tracker/static/media/crunches.9d2fc912560d3701da48.png",
+    "static/media/swiming.png": "/fitness-tracker/static/media/swiming.90d98cb404edc324a233.png",
+    "static/media/squat.png": "/fitness-tracker/static/media/squat.c65670a95b73c913700a.png",
+    "index.html": "/fitness-tracker/index.html",
+    "main.0ef33d4a.css.map": "/fitness-tracker/static/css/main.0ef33d4a.css.map",
+    "main.456fc025.js.map": "/fitness-tracker/static/js/main.456fc025.js.map",
+    "453.9537af23.chunk.js.map": "/fitness-tracker/static/js/453.9537af23.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0ef33d4a.css",
+    "static/js/main.456fc025.js"
+  ]
+}
