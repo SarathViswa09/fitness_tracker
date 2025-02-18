@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Statistics from "./pages/Statistics";
 import WorkOut from "./pages/WorkOut";
@@ -22,10 +20,10 @@ function App() {
 
   return (
     <BrowserRouter>
-      {isAuthenticated && <Header onLogout={handleLogout} />}
+      {/* {isAuthenticated && <Header onLogout={handleLogout} />}
       {!isAuthenticated ? (
         <Login onLogin={handleLogin} />
-      ) : (
+      ) : ( */}
         <Sidebar>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -34,7 +32,7 @@ function App() {
             <Route path="/workout" element={<WorkOut />} />
           </Routes>
         </Sidebar>
-      )}
+      {/* )} */}
     </BrowserRouter>
   );
 }
